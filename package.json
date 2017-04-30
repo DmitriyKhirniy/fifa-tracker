@@ -1,9 +1,9 @@
 {
-  "name": "angular2-full-stack",
-  "version": "4.0.0",
+  "name": "Fifa-tracker",
+  "version": "0.0.1",
   "license": "MIT",
-  "author": "Davide Violante",
-  "description": "Angular Full Stack project built using Angular 4, Express, Mongoose and Node.",
+  "author": "Dmytryi Khirnyi",
+  "description": "Angular Fifa tracker project built using Angular 4, Express, Mongoose and Node.",
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
