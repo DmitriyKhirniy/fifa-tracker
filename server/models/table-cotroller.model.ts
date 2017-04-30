@@ -54,6 +54,18 @@ export interface ITableController {
   getTournament(id: number | string): ITournament | IResponse;
 
   /**
+   * Method to add new Tournament
+   * @param tournament
+   */
+  addTournament(tournament: ITournament): ITournament | IResponse;
+
+  /**
+   * Method to add existing team to tournament table
+   * @param teamId
+   */
+  addTeamToTournamentTable(teamId: number): ITournamentTable | IResponse;
+
+  /**
    * Get all match list
    */
   getTournamentMatches(tournamentId: number | string): Array<IMatch> | IResponse;

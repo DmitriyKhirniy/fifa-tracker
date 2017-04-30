@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {Http} from '@angular/http';
+import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
 
-import { DataService } from '../services/data.service';
-import { ToastComponent } from '../shared/toast/toast.component';
+import {DataService} from '../services/data.service';
+import {ToastComponent} from '../shared/toast/toast.component';
+import {IResponse} from '../../../server/models/table-cotroller.model';
+import {IUser} from '../../../server/models/user.model';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +13,10 @@ import { ToastComponent } from '../shared/toast/toast.component';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
+  public users: Array<IUser>;
+
+  public readonly currentTableId: String = '59061141cdc12728d82cf099';
 
   cats = [];
   isLoading = true;
@@ -26,10 +32,13 @@ export class HomeComponent implements OnInit {
   constructor(private http: Http,
               private dataService: DataService,
               public toast: ToastComponent,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder) {
+  }
 
   ngOnInit() {
     this.getCats();
+
+    this.loadUsers();
 
     this.addCatForm = this.formBuilder.group({
       name: this.name,
@@ -38,9 +47,58 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  private createTable(): void {
+    const table: any = {
+      teams: [],
+      users: [],
+      tournaments: []
+    };
+
+    this.dataService.addTable(table)
+      .subscribe(
+        (response) => {
+          console.log('response: ', response);
+        },
+        (err: IResponse) => {
+          console.log('respo: ', err);
+        }
+      );
+  }
+
+  public addNewUser(): void {
+    const user: IUser = {
+      name: 'Nikita',
+      age: 27
+    };
+
+    this.dataService.addNewUser(user, this.currentTableId.toString())
+      .subscribe(
+        (response) => {
+          console.log('response: ', response);
+        },
+        (err) => {
+          console.log('errror: ', err);
+        }
+      );
+  }
+
+  public loadUsers(): void {
+    this.dataService.getUsers(this.currentTableId.toString())
+      .subscribe(
+        (response) => {
+          console.log('users: ', response);
+        },
+        (err) => {
+          console.log('err: ', err);
+        }
+      );
+  }
+
   getCats() {
-    this.dataService.getCats().subscribe(
-      data => this.cats = data,
+    this.dataService.getCats(this.currentTableId.toString()).subscribe(
+      data => {
+        console.log('table: ', data);
+      },
       error => console.log(error),
       () => this.isLoading = false
     );
@@ -86,7 +144,9 @@ export class HomeComponent implements OnInit {
     if (window.confirm('Are you sure you want to permanently delete this item?')) {
       this.dataService.deleteCat(cat).subscribe(
         res => {
-          const pos = this.cats.map(elem => { return elem._id; }).indexOf(cat._id);
+          const pos = this.cats.map(elem => {
+            return elem._id;
+          }).indexOf(cat._id);
           this.cats.splice(pos, 1);
           this.toast.setMessage('item deleted successfully.', 'success');
         },

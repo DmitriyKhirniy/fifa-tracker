@@ -12,7 +12,8 @@ export const tournamentTableSchema = new Schema(
     difference: Number,
     series: [
       {
-        value: String
+        value: String,
+        matchId: String
       }
     ],
     team: teamSchema

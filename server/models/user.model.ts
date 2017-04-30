@@ -8,7 +8,7 @@ export const userSchema = new Schema({
 });
 
 export interface IUser {
-  readonly id: number;
+  readonly id?: number | string;
   readonly name: string;
   readonly age: number;
 }

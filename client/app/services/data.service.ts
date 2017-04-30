@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http, Headers, RequestOptions, URLSearchParams } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {IUser} from "../../../server/models/user.model";
+import {IResponse} from "../../../server/models/table-cotroller.model";
 
 @Injectable()
 export class DataService {
@@ -12,8 +14,25 @@ export class DataService {
 
   constructor(private http: Http) { }
 
-  getCats(): Observable<any> {
-    return this.http.get('/api/cats').map(res => res.json());
+  public addTable(table: any): Observable<any> {
+    return this.http.post('/api/table', table)
+      .map(res => res.json());
+  }
+
+  public addNewUser(user: IUser , id: string): Observable<IResponse> {
+    return this.http.post('/api/user', {user, id})
+      .map(res => res.json());
+  }
+
+  public getUsers(tableId: string): Observable<Array<IUser> | IResponse> {
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('tableId' , tableId.toString());
+    return this.http.get('/api/users' , {search: params})
+      .map(res => res.json());
+  }
+
+  getCats(id: string | number): Observable<any> {
+    return this.http.get(`/api/table/${id}`).map(res => res.json());
   }
 
   countCats(): Observable<any> {
