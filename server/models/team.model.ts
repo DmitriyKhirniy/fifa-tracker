@@ -9,7 +9,7 @@ export const teamSchema = new Schema({
 });
 
 export interface ITeam {
-  readonly id: number;
+  readonly id?: number;
   readonly title: string;
-  user: IUser;
+  user?: IUser;
 }

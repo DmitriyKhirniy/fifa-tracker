@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {IUser} from "../../../server/models/user.model";
 import {IResponse} from "../../../server/models/table-cotroller.model";
+import {ITeam} from "../../../server/models/team.model";
 
 @Injectable()
 export class DataService {
@@ -21,6 +22,15 @@ export class DataService {
 
   public addNewUser(user: IUser , id: string): Observable<IResponse> {
     return this.http.post('/api/user', {user, id})
+      .map(res => res.json());
+  }
+
+  public addNewTeam(team: ITeam , userId: string , tableId: string): Observable<any> {
+    return this.http.post('/api/team' , {
+      team,
+      userId,
+      tableId
+    })
       .map(res => res.json());
   }
 

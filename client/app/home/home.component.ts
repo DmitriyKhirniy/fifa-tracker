@@ -6,6 +6,7 @@ import {DataService} from '../services/data.service';
 import {ToastComponent} from '../shared/toast/toast.component';
 import {IResponse} from '../../../server/models/table-cotroller.model';
 import {IUser} from '../../../server/models/user.model';
+import {ITeam} from '../../../server/models/team.model';
 
 @Component({
   selector: 'app-home',
@@ -65,6 +66,20 @@ export class HomeComponent implements OnInit {
       );
   }
 
+  public addNewTeam(): void {
+    const team: ITeam = {
+      title: 'Real Madrid'
+    };
+
+    this.dataService.addNewTeam(team, this.users[1]['_id'] , this.currentTableId.toString())
+      .subscribe(
+        (response) => {
+          console.log('re: ', response);
+        },
+        (error) => console.log('error: ', error)
+      );
+  }
+
   public addNewUser(): void {
     const user: IUser = {
       name: 'Nikita',
@@ -85,8 +100,9 @@ export class HomeComponent implements OnInit {
   public loadUsers(): void {
     this.dataService.getUsers(this.currentTableId.toString())
       .subscribe(
-        (response) => {
+        (response: Array<IUser>) => {
           console.log('users: ', response);
+          this.users = response;
         },
         (err) => {
           console.log('err: ', err);
