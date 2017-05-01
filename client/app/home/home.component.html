@@ -7,6 +7,63 @@
 
 <app-toast [message]="toast.message"></app-toast>
 
+<div class="card" *ngIf="!isLoading && tournamentTable">
+  <h4 class="card-header">Current Table ({{tournamentTable.length}})</h4>
+  <div class="card-block">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-default">
+      <tr>
+        <th>P</th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>G</th>
+        <th>S</th>
+        <th>M</th>
+        <th>D</th>
+        <th>Series</th>
+        <th>P</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="tournamentTable.length === 0">
+      <tr>
+        <td colspan="4">There are no cats in the DB. Add a new cat below.</td>
+      </tr>
+      </tbody>
+      <tbody>
+      <tr *ngFor="let entity of tournamentTable;let i=index">
+        <td>{{i+1}}</td>
+        <td>{{entity._id}}</td>
+        <td>{{entity.team.title}}</td>
+        <td>{{entity.games}}</td>
+        <td>{{entity.scored}}</td>
+        <td>{{entity.missed}}</td>
+        <td style="text-align: center">
+          <span [class.text-warning]="entity.difference === 0 "
+                [class.text-success]="entity.difference > 0"
+                [class.text-danger]="entity.difference < 0">
+            {{entity.difference}}
+          </span>
+        </td>
+        <td style="text-align: center">
+          <span *ngIf="entity.series?.length !== 0">
+            <span *ngFor="let element of entity.series"
+                  [class.text-warning]="element.value === 'D'"
+                  [class.text-success]="element.value === 'W'"
+                  [class.text-danger]="element.value === 'L'">
+              {{element.value}}
+            </span>
+          </span>
+          <span *ngIf="entity.series?.length === 0">
+            No matches...
+          </span>
+        </td>
+        <td style="text-align: center;font-weight: bold">{{entity.points}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <div class="card" *ngIf="!isLoading">
   <h4 class="card-header">Current cats ({{cats.length}})</h4>
   <div class="card-block">
@@ -22,7 +79,7 @@
       <tbody *ngIf="cats.length === 0">
         <tr>
           <td colspan="4">There are no cats in the DB. Add a new cat below.</td>
-        </tr>  
+        </tr>
       </tbody>
       <tbody *ngIf="!isEditing">
         <tr *ngFor="let cat of cats">
@@ -32,7 +89,7 @@
           <td>
             <button class="btn btn-sm btn-warning" (click)="enableEditing(cat)"><i class="fa fa-pencil"></i> Edit</button> <button class="btn btn-sm btn-danger" (click)="deleteCat(cat)"><i class="fa fa-trash"></i> Delete</button>
           </td>
-        </tr>  
+        </tr>
       </tbody>
       <tbody *ngIf="isEditing">
         <tr>
@@ -52,6 +109,31 @@
             <button class="btn btn-sm btn-warning" (click)="cancelEditing()"><i class="fa fa-times"></i> Cancel</button>
           </td>
         </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" *ngIf="!isLoading && users">
+  <h4 class="card-header">Current users ({{users.length}})</h4>
+  <div class="card-block">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-default">
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="users.length === 0">
+      <tr>
+        <td colspan="4">There are no cats in the DB. Add a new cat below.</td>
+      </tr>
+      </tbody>
+      <tbody *ngIf="!isEditing">
+      <tr *ngFor="let user of users">
+        <td>{{user.name}}</td>
+        <td>{{user.age}}</td>
+      </tr>
       </tbody>
     </table>
   </div>
