@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
 
   public tournamentTable: Array<ITournamentTable>;
 
+
   public readonly currentTableId: String = '59061141cdc12728d82cf099';
   public readonly currentTournamntId: String = '5907643004e0c70134d7bb61';
 
@@ -48,8 +49,6 @@ export class HomeComponent implements OnInit {
 
     this.getTournamentTable();
 
-    //this.addTeamToTournamentTable();
-
     this.addCatForm = this.formBuilder.group({
       name: this.name,
       age: this.age,
@@ -72,7 +71,7 @@ export class HomeComponent implements OnInit {
   private addTeamToTournamentTable(): void {
 
     const request: any = {
-      teamId: '59064c0ac9be2f2cc8638f30',
+      teamId: '59077982bac21a233019d239',
       tableId: this.currentTableId.toString(),
       tournamentId: this.currentTournamntId.toString()
     }
@@ -123,10 +122,10 @@ export class HomeComponent implements OnInit {
 
   public addNewTeam(): void {
     const team: ITeam = {
-      title: 'Real Madrid'
+      title: 'Bayern Munich'
     };
 
-    this.dataService.addNewTeam(team, this.users[1]['_id'], this.currentTableId.toString())
+    this.dataService.addNewTeam(team, this.users[4]['_id'], this.currentTableId.toString())
       .subscribe(
         (response) => {
           console.log('re: ', response);

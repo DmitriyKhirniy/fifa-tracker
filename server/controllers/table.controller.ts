@@ -173,13 +173,10 @@ export abstract class TableBaseCtrl {
   }
 
   public addEntityToTournament = (req, res) => {
-    console.log('body: ', req.body);
     this.model.findOne({_id: req.body.tableId}, (err, entity) => {
       if (err) {
         return res.status(400).json({message: err.toString()});
       }
-
-      console.log('tour: ', entity)
 
       const tournament: any = entity.tournaments.filter((element) => {
         return element._id.toString() === req.body.tournamentId.toString();
@@ -203,6 +200,7 @@ export abstract class TableBaseCtrl {
         games: 0,
         difference: 0,
         series: [],
+        points: 0,
         team: team
       };
 

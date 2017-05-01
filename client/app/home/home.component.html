@@ -36,7 +36,14 @@
         <td>{{entity.scored}}</td>
         <td>{{entity.missed}}</td>
         <td>{{entity.difference}}</td>
-        <td>{{entity.series}}</td>
+        <td style="text-align: center">
+          <span *ngIf="entity.series?.length !== 0">
+            {{entity.series}}
+          </span>
+          <span *ngIf="entity.series?.length === 0">
+            No matches...
+          </span>
+        </td>
         <td>{{entity.points}}</td>
       </tr>
       </tbody>
