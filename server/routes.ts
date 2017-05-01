@@ -27,5 +27,10 @@ export default function setRoutes(app) {
 
   app.route('/api/user').post(table.addUser);
   app.route('/api/users').get(table.getUsers);
+
+  app.route('/api/tournament').post(table.createTournament);
+  app.route('/api/tournament/:id').get(table.getTournament);
+  app.route('/api/tournament/table/:id').get(table.getTournamentTable);
+  app.route('/api/tournament/table').post(table.addEntityToTournament);
 }
 

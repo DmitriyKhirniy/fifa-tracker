@@ -1,6 +1,7 @@
 import {IResponse} from '../models/table-cotroller.model';
 import {ITeam} from '../models/team.model';
 import {IUser} from '../models/user.model';
+import {ITable} from "../models/table.model";
 
 export abstract class TableBaseCtrl {
 
@@ -103,6 +104,130 @@ export abstract class TableBaseCtrl {
 
       return res.status(200).json(entity);
     })
+  }
+
+  public createTournament = (req, res) => {
+    this.model.findOne({_id: req.body.tableId}, (err, entity) => {
+      if (err) {
+        return res.status(400).json({message: err.toString()});
+      }
+
+      entity.tournaments.push(req.body.tournament);
+      entity.save();
+      return res.status(201).json({message: 'Created.'});
+    });
+  }
+
+  public getTournament = (req, res) => {
+    this.model.findOne({_id: req.query.tableId}, (err, entity) => {
+      if (err) {
+        return res.status(400).json({message: err.toString()});
+      }
+
+      const tournament: any = entity.tournaments.filter((element) => {
+        return element._id.toString() === req.params.id.toString();
+      })[0];
+
+      if (!tournament) {
+        return res.status(404).json({message: 'Tournament not found.'});
+      }
+
+      return res.status(200).json(tournament);
+    });
+  }
+
+  public getTournamentTable = (req, res) => {
+    this.model.findOne({_id: req.query.tableId}, (err, entity) => {
+      if (err) {
+        return res.status(400).json({message: err.toString()});
+      }
+
+      const tournament: any = entity.tournaments.filter((element) => {
+        return element._id.toString() === req.params.id.toString();
+      })[0];
+
+      if (!tournament) {
+        return res.status(404).json({message: 'Tournament not found.'});
+      }
+
+      return res.status(200).json(tournament.table);
+    });
+  }
+
+  public getTournamentMatches = (req, res) => {
+    this.model.findOne({_id: req.query.tableId}, (err, entity) => {
+      if (err) {
+        return res.status(400).json({message: err.toString()});
+      }
+
+      const tournament: any = entity.tournaments.filter((element) => {
+        return element._id.toString() === req.params.id.toString();
+      })[0];
+
+      if (!tournament) {
+        return res.status(404).json({message: 'Tournament not found.'});
+      }
+
+      return res.status(200).json(tournament.matches);
+    });
+  }
+
+  public addEntityToTournament = (req, res) => {
+    console.log('body: ', req.body);
+    this.model.findOne({_id: req.body.tableId}, (err, entity) => {
+      if (err) {
+        return res.status(400).json({message: err.toString()});
+      }
+
+      console.log('tour: ', entity)
+
+      const tournament: any = entity.tournaments.filter((element) => {
+        return element._id.toString() === req.body.tournamentId.toString();
+      })[0];
+
+      if (!tournament) {
+        return res.status(404).json({message: 'Tournament not found.'});
+      }
+
+      const team: any = entity.teams.filter((element) => {
+        return element._id.toString() === req.body.teamId.toString();
+      })[0];
+
+      if (!team) {
+        return res.status(404).json({message: 'Team not found.'});
+      }
+
+      const value: any = {
+        scored: 0,
+        missed: 0,
+        games: 0,
+        difference: 0,
+        series: [],
+        team: team
+      };
+
+      tournament.table.push(value);
+
+      entity.save();
+
+      return res.status(200).json(value);
+    });
+  }
+
+  public addTournamentMatch = (req, res) => {
+    this.model.findOne({_id: req.body.tableId}, (err, entity) => {
+      if (err) {
+        return res.status(400).json({message: err.toString()});
+      }
+      const tournament: any = entity.tournaments.filter((element) => {
+        return element._id.toString() === req.body.tournamentId.toString();
+      })[0];
+      if (!tournament) {
+        return res.status(404).json({message: 'Tournament not found.'});
+      }
+      tournament.table.push(req.body.match);
+      return res.status(200).json(tournament.matches);
+    });
   }
 
 }

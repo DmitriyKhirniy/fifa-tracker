@@ -7,6 +7,8 @@ import {ToastComponent} from '../shared/toast/toast.component';
 import {IResponse} from '../../../server/models/table-cotroller.model';
 import {IUser} from '../../../server/models/user.model';
 import {ITeam} from '../../../server/models/team.model';
+import {ITournament} from "../../../server/models/tournament.model";
+import {ITournamentTable} from "../../../server/models/tournament-table.model";
 
 @Component({
   selector: 'app-home',
@@ -17,7 +19,10 @@ export class HomeComponent implements OnInit {
 
   public users: Array<IUser>;
 
+  public tournamentTable: Array<ITournamentTable>;
+
   public readonly currentTableId: String = '59061141cdc12728d82cf099';
+  public readonly currentTournamntId: String = '5907643004e0c70134d7bb61';
 
   cats = [];
   isLoading = true;
@@ -41,11 +46,61 @@ export class HomeComponent implements OnInit {
 
     this.loadUsers();
 
+    this.getTournamentTable();
+
+    //this.addTeamToTournamentTable();
+
     this.addCatForm = this.formBuilder.group({
       name: this.name,
       age: this.age,
       weight: this.weight
     });
+  }
+
+  private getTournamentTable(): void {
+    this.dataService.getTournamentTable(this.currentTableId.toString(), this.currentTournamntId.toString())
+      .subscribe(
+        (response: Array<ITournamentTable>) => {
+          console.log('tour: ', response);
+          if (response) {
+            this.tournamentTable = response;
+          }
+        }
+      );
+  }
+
+  private addTeamToTournamentTable(): void {
+
+    const request: any = {
+      teamId: '59064c0ac9be2f2cc8638f30',
+      tableId: this.currentTableId.toString(),
+      tournamentId: this.currentTournamntId.toString()
+    }
+
+    this.dataService.addEntityToTournamentTable(request)
+      .subscribe(
+        (respose) => {
+          console.log('table created: ', respose);
+        },
+        (err) => console.log('error: ', err)
+      );
+  }
+
+  private createTournament(): void {
+    const tournament: ITournament = {
+      title: 'Test FIFA tournament',
+      createdDate: new Date,
+      table: [],
+      matches: []
+    };
+
+    this.dataService.createTournament(tournament, this.currentTableId.toString())
+      .subscribe(
+        (response: any) => {
+          console.log('tournament created: ', response);
+        },
+        (error) => console.log('errr: ', error)
+      );
   }
 
   private createTable(): void {
@@ -71,7 +126,7 @@ export class HomeComponent implements OnInit {
       title: 'Real Madrid'
     };
 
-    this.dataService.addNewTeam(team, this.users[1]['_id'] , this.currentTableId.toString())
+    this.dataService.addNewTeam(team, this.users[1]['_id'], this.currentTableId.toString())
       .subscribe(
         (response) => {
           console.log('re: ', response);

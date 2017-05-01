@@ -26,6 +26,7 @@ export interface ITournamentTable {
   missed: number;
   games: number;
   difference: number;
+  points: number;
   series: [{
       value: string,
       matchId: number

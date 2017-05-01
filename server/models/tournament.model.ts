@@ -15,9 +15,10 @@ export const tournamentSchema = new Schema({
 });
 
 export interface ITournament {
-  id: number | string;
+  id?: number | string;
   title: string;
   createdDate: Date;
   table: Array<ITournamentTable>;
+  matches: Array<any>;
 }
 

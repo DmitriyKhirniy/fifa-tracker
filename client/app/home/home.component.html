@@ -7,6 +7,43 @@
 
 <app-toast [message]="toast.message"></app-toast>
 
+<div class="card" *ngIf="!isLoading && tournamentTable">
+  <h4 class="card-header">Current Table ({{tournamentTable.length}})</h4>
+  <div class="card-block">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-default">
+      <tr>
+        <th>P</th>
+        <th>Name</th>
+        <th>G</th>
+        <th>S</th>
+        <th>M</th>
+        <th>D</th>
+        <th>Series</th>
+        <th>P</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="tournamentTable.length === 0">
+      <tr>
+        <td colspan="4">There are no cats in the DB. Add a new cat below.</td>
+      </tr>
+      </tbody>
+      <tbody>
+      <tr *ngFor="let entity of tournamentTable;let i=index">
+        <td>{{i+1}}</td>
+        <td>{{entity.team.title}}</td>
+        <td>{{entity.games}}</td>
+        <td>{{entity.scored}}</td>
+        <td>{{entity.missed}}</td>
+        <td>{{entity.difference}}</td>
+        <td>{{entity.series}}</td>
+        <td>{{entity.points}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <div class="card" *ngIf="!isLoading">
   <h4 class="card-header">Current cats ({{cats.length}})</h4>
   <div class="card-block">
