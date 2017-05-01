@@ -41,6 +41,11 @@ export class DataService {
       .map(res => res.json());
   }
 
+  public addMatchToTournament(body: any): Observable<any> {
+    return this.http.post('/api/tournament/match', body)
+      .map(res => res.json())
+  }
+
   public addTable(table: any): Observable<any> {
     return this.http.post('/api/table', table)
       .map(res => res.json());

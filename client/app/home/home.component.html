@@ -14,6 +14,7 @@
       <thead class="thead-default">
       <tr>
         <th>P</th>
+        <th>Id</th>
         <th>Name</th>
         <th>G</th>
         <th>S</th>
@@ -31,20 +32,32 @@
       <tbody>
       <tr *ngFor="let entity of tournamentTable;let i=index">
         <td>{{i+1}}</td>
+        <td>{{entity._id}}</td>
         <td>{{entity.team.title}}</td>
         <td>{{entity.games}}</td>
         <td>{{entity.scored}}</td>
         <td>{{entity.missed}}</td>
-        <td>{{entity.difference}}</td>
+        <td style="text-align: center">
+          <span [class.text-warning]="entity.difference === 0 "
+                [class.text-success]="entity.difference > 0"
+                [class.text-danger]="entity.difference < 0">
+            {{entity.difference}}
+          </span>
+        </td>
         <td style="text-align: center">
           <span *ngIf="entity.series?.length !== 0">
-            {{entity.series}}
+            <span *ngFor="let element of entity.series"
+                  [class.text-warning]="element.value === 'D'"
+                  [class.text-success]="element.value === 'W'"
+                  [class.text-danger]="element.value === 'L'">
+              {{element.value}}
+            </span>
           </span>
           <span *ngIf="entity.series?.length === 0">
             No matches...
           </span>
         </td>
-        <td>{{entity.points}}</td>
+        <td style="text-align: center;font-weight: bold">{{entity.points}}</td>
       </tr>
       </tbody>
     </table>

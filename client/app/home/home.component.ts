@@ -49,11 +49,37 @@ export class HomeComponent implements OnInit {
 
     this.getTournamentTable();
 
+    //this.addMatchToTournament();
+
     this.addCatForm = this.formBuilder.group({
       name: this.name,
       age: this.age,
       weight: this.weight
     });
+  }
+
+  private addMatchToTournament(): void {
+    const request: any = {
+      tableId: this.currentTableId.toString(),
+      tournamentId: this.currentTournamntId.toString(),
+      home: {
+        scored: 2,
+        teamId: '59077a7df7c52e22944d461b'
+      },
+      away: {
+        scored: 1,
+        teamId: '59077a58f7c52e22944d45b2'
+      }
+    };
+
+    this.dataService.addMatchToTournament(request)
+      .subscribe(
+        (response) => {
+          console.log('response: ', response);
+          this.tournamentTable = response;
+        },
+        (err) => console.log('err: ', err)
+      );
   }
 
   private getTournamentTable(): void {

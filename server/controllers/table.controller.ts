@@ -223,8 +223,72 @@ export abstract class TableBaseCtrl {
       if (!tournament) {
         return res.status(404).json({message: 'Tournament not found.'});
       }
-      tournament.table.push(req.body.match);
-      return res.status(200).json(tournament.matches);
+
+      const homeEntity: any = tournament.table.filter((element) => {
+        return element._id.toString() === req.body.home.teamId.toString();
+      })[0];
+
+      const awayEntity: any = tournament.table.filter((element) => {
+        return element._id.toString() === req.body.away.teamId.toString();
+      })[0];
+
+      const homeScored: number = req.body.home.scored;
+      const awayScored: number = req.body.away.scored;
+
+      if (homeEntity && awayEntity) {
+        homeEntity.scored += homeScored;
+        homeEntity.missed += awayScored;
+        awayEntity.scored += awayScored;
+        awayEntity.missed += homeScored;
+        homeEntity.games++;
+        awayEntity.games++;
+
+        homeEntity.difference += (homeScored - awayScored);
+        awayEntity.difference += (awayScored - homeScored);
+
+        if (!homeEntity.points) {
+          homeEntity.points = 0;
+        }
+
+        if (!awayEntity.points) {
+          awayEntity.points = 0;
+        }
+
+        if (homeScored === awayScored) {
+          homeEntity.points++;
+          homeEntity.series.push({value: 'D'});
+          awayEntity.points++;
+          awayEntity.series.push({value: 'D'});
+        } else if (homeScored > awayScored) {
+          homeEntity.points += 3;
+          homeEntity.series.push({value: 'W'});
+          awayEntity.series.push({value: 'L'});
+        } else {
+          awayEntity.points += 3;
+          awayEntity.series.push({value: 'W'});
+          homeEntity.series.push({value: 'L'});
+        }
+
+        tournament.table.sort((_a, _b) => {
+          return _b.points - _a.points;
+        });
+      }
+
+      const match: any = {
+        home: {
+          scored: req.body.home.scored,
+          team: homeEntity.team
+        },
+        away: {
+          scored: req.body.away.scored,
+          team: awayEntity.team
+        }
+      };
+
+      console.log('match: ', match);
+      console.log('table: ', tournament.table);
+      entity.save();
+      return res.status(200).json(tournament.table);
     });
   }
 
