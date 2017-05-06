@@ -14,7 +14,6 @@
       <thead class="thead-default">
       <tr>
         <th>P</th>
-        <th>Id</th>
         <th>Name</th>
         <th>G</th>
         <th>S</th>
@@ -32,7 +31,6 @@
       <tbody>
       <tr *ngFor="let entity of tournamentTable;let i=index">
         <td>{{i+1}}</td>
-        <td>{{entity._id}}</td>
         <td>{{entity.team.title}}</td>
         <td>{{entity.games}}</td>
         <td>{{entity.scored}}</td>
@@ -64,7 +62,7 @@
   </div>
 </div>
 
-<div class="card" *ngIf="!isLoading">
+<!--<div class="card" *ngIf="!isLoading">
   <h4 class="card-header">Current cats ({{cats.length}})</h4>
   <div class="card-block">
     <table class="table table-bordered table-striped">
@@ -112,11 +110,30 @@
       </tbody>
     </table>
   </div>
-</div>
+</div>-->
 
 <div class="card" *ngIf="!isLoading && users">
   <h4 class="card-header">Current users ({{users.length}})</h4>
   <div class="card-block">
+
+    <div class="input-group" [formGroup]="addMatch" style="display: flex;width: 100%;margin-bottom: 30px;">
+
+      <div formGroupName="home">
+        <select class="form-control" style="width: 50%" formControlName="teamId">
+          <option *ngFor="let team of tournamentTable" [value]="team._id">{{team.team.title}}</option>
+        </select>
+        <input type="number" class="form-control" style="width: 30%" formControlName="scored">
+      </div>
+
+      <div formGroupName="away">
+        <select class="form-control" style="width: 50%;margin-left: 10%;" formControlName="teamId">
+          <option *ngFor="let team of tournamentTable" [value]="team._id">{{team.team.title}}</option>
+        </select>
+        <input type="number" class="form-control" style="width: 30%" formControlName="scored">
+      </div>
+      <button type="button" class="btn btn-info" style="margin-left: 2%" (click)="addTeamToTournament()">Add</button>
+    </div>
+
     <table class="table table-bordered table-striped">
       <thead class="thead-default">
       <tr>

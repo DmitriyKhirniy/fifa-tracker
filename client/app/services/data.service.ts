@@ -17,6 +17,11 @@ export class DataService {
   constructor(private http: Http) {
   }
 
+  public getTables(): Observable<any> {
+    return this.http.get('/api/tables')
+      .map(res => res.json());
+  }
+
   public createTournament(tournament: ITournament, tableId: string): Observable<IResponse> {
     return this.http.post('/api/tournament', {tournament, tableId})
       .map(res => res.json());
@@ -25,25 +30,25 @@ export class DataService {
   public getTournament(tableId: string, tournamentId: string): Observable<any> {
     const params: URLSearchParams = new URLSearchParams();
     params.set('tableId', tableId.toString());
-    return this.http.get(`/api/tournament/${tournamentId}` , {search: params})
+    return this.http.get(`/api/tournament/${tournamentId}`, {search: params})
       .map(res => res.json());
   }
 
   public getTournamentTable(tableId: string, tournamentId: string): Observable<any> {
     const params: URLSearchParams = new URLSearchParams();
     params.set('tableId', tableId.toString());
-    return this.http.get(`/api/tournament/table/${tournamentId}` , {search: params})
+    return this.http.get(`/api/tournament/table/${tournamentId}`, {search: params})
       .map(res => res.json());
   }
 
   public addEntityToTournamentTable(body: any): Observable<any> {
-    return this.http.post('/api/tournament/table' , body)
+    return this.http.post('/api/tournament/table', body)
       .map(res => res.json());
   }
 
   public addMatchToTournament(body: any): Observable<any> {
     return this.http.post('/api/tournament/match', body)
-      .map(res => res.json())
+      .map(res => res.json());
   }
 
   public addTable(table: any): Observable<any> {

@@ -204,6 +204,7 @@ export abstract class TableBaseCtrl {
         team: team
       };
 
+      tournament.table.splice(3 , 1);
       tournament.table.push(value);
 
       entity.save();

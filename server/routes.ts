@@ -21,6 +21,8 @@ export default function setRoutes(app) {
 
   const table = new TableCtrl();
 
+  app.route('/api/tables').get(table.getTables);
+
   app.route('/api/table').post(table.addTable);
   app.route('/api/table/:id').get(table.getTable);
   app.route('/api/team').post(table.addTeam);

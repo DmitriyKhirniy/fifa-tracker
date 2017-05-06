@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Http} from '@angular/http';
-import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
+import {FormGroup, FormControl, Validators, FormBuilder, Form} from '@angular/forms';
 
 import {DataService} from '../services/data.service';
 import {ToastComponent} from '../shared/toast/toast.component';
@@ -17,13 +17,15 @@ import {ITournamentTable} from "../../../server/models/tournament-table.model";
 })
 export class HomeComponent implements OnInit {
 
+  public addMatch: FormGroup;
+
   public users: Array<IUser>;
 
   public tournamentTable: Array<ITournamentTable>;
 
 
   public readonly currentTableId: String = '59061141cdc12728d82cf099';
-  public readonly currentTournamntId: String = '5907643004e0c70134d7bb61';
+  public readonly currentTournamntId: String = '590adcb046c55421c0f93586';
 
   cats = [];
   isLoading = true;
@@ -40,16 +42,54 @@ export class HomeComponent implements OnInit {
               private dataService: DataService,
               public toast: ToastComponent,
               private formBuilder: FormBuilder) {
+    this.addMatch = this.formBuilder.group({
+      home: this.formBuilder.group({
+        teamId: [null , [
+          Validators.required
+        ]],
+        scored: [0]
+      }),
+      away: this.formBuilder.group({
+        teamId: [null , [
+          Validators.required
+        ]],
+        scored: [0]
+      })
+    });
+  }
+
+  public addTeamToTournament(): void {
+    const request: any = {
+      tableId: this.currentTableId.toString(),
+      tournamentId: this.currentTournamntId.toString(),
+      home: {
+        scored: +this.addMatch.value.home.scored,
+        teamId: this.addMatch.value.home.teamId
+      },
+      away: {
+        scored: this.addMatch.value.away.scored,
+        teamId: this.addMatch.value.away.teamId
+      }
+    };
+    console.log(request);
+    this.dataService.addMatchToTournament(request)
+      .subscribe(
+        (response) => {
+          console.log('response: ', response);
+          this.addMatch.reset();
+          this.tournamentTable = response;
+        },
+        (err) => console.log('err: ', err)
+      );
   }
 
   ngOnInit() {
+
     this.getCats();
 
     this.loadUsers();
 
     this.getTournamentTable();
-
-    //this.addMatchToTournament();
 
     this.addCatForm = this.formBuilder.group({
       name: this.name,
@@ -90,22 +130,24 @@ export class HomeComponent implements OnInit {
           if (response) {
             this.tournamentTable = response;
           }
-        }
+        },
+        () => {},
+        () => this.isLoading = false
       );
   }
 
   private addTeamToTournamentTable(): void {
 
     const request: any = {
-      teamId: '59077982bac21a233019d239',
+      teamId: '590c15bcb0b8f91ce8f14bbd',
       tableId: this.currentTableId.toString(),
       tournamentId: this.currentTournamntId.toString()
-    }
+    };
 
     this.dataService.addEntityToTournamentTable(request)
       .subscribe(
-        (respose) => {
-          console.log('table created: ', respose);
+        (response) => {
+          console.log('table created: ', response);
         },
         (err) => console.log('error: ', err)
       );
@@ -113,7 +155,7 @@ export class HomeComponent implements OnInit {
 
   private createTournament(): void {
     const tournament: ITournament = {
-      title: 'Test FIFA tournament',
+      title: 'FIFA tournament Start',
       createdDate: new Date,
       table: [],
       matches: []
@@ -148,10 +190,10 @@ export class HomeComponent implements OnInit {
 
   public addNewTeam(): void {
     const team: ITeam = {
-      title: 'Bayern Munich'
+      title: 'Juventus'
     };
 
-    this.dataService.addNewTeam(team, this.users[4]['_id'], this.currentTableId.toString())
+    this.dataService.addNewTeam(team, '590622e3ca00c22bb43ccf03', this.currentTableId.toString())
       .subscribe(
         (response) => {
           console.log('re: ', response);
@@ -190,10 +232,19 @@ export class HomeComponent implements OnInit {
       );
   }
 
+  public getTables(): void {
+    this.dataService.getTables()
+      .subscribe(
+        (response) => {
+          console.log('tables: ', response);
+        }
+      );
+  }
+
   getCats() {
     this.dataService.getCats(this.currentTableId.toString()).subscribe(
       data => {
-        console.log('table: ', data);
+        console.log('current table: ', data);
       },
       error => console.log(error),
       () => this.isLoading = false
