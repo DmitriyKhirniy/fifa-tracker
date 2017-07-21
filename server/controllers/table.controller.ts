@@ -1,8 +1,5 @@
-import {IResponse} from '../models/table-cotroller.model';
 import {ITeam} from '../models/team.model';
 import {IUser} from '../models/user.model';
-import {ITable} from "../models/table.model";
-
 export abstract class TableBaseCtrl {
 
   abstract model: any;
@@ -14,14 +11,10 @@ export abstract class TableBaseCtrl {
         return res.status(400).json({message: err.toString()});
       }
 
-      console.log(req.body);
-
-      console.log('entity: ', entity.users)
       const user: IUser = entity.users.filter((element) => {
         return element._id.toString() === req.body.userId.toString();
       })[0];
 
-      console.log('user: ', user);
       if (!user) {
         return res.status(404).json({message: 'User not found!'});
       }
@@ -201,10 +194,13 @@ export abstract class TableBaseCtrl {
         difference: 0,
         series: [],
         points: 0,
+        wins: 0,
+        draws: 0,
+        loses: 0,
         team: team
       };
 
-      tournament.table.splice(3 , 1);
+      // tournament.table.splice(3, 1);
       tournament.table.push(value);
 
       entity.save();
@@ -271,7 +267,7 @@ export abstract class TableBaseCtrl {
         }
 
         tournament.table.sort((_a, _b) => {
-          return _b.points - _a.points;
+          return _b.points - _a.points || _b.difference - _a.difference;
         });
       }
 

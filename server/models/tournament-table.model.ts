@@ -8,6 +8,9 @@ export const tournamentTableSchema = new Schema(
     scored: Number,
     missed: Number,
     games: Number,
+    wins: Number,
+    draws: Number,
+    loses: Number,
     points: Number,
     difference: Number,
     series: [

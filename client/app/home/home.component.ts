@@ -24,8 +24,10 @@ export class HomeComponent implements OnInit {
   public tournamentTable: Array<ITournamentTable>;
 
 
-  public readonly currentTableId: String = '59061141cdc12728d82cf099';
-  public readonly currentTournamntId: String = '590adcb046c55421c0f93586';
+  // public readonly currentTableId: String = '59061141cdc12728d82cf099';
+  public readonly currentTableId: String = '590addadd5e7c5211c04d4f3';
+  // public readonly currentTournamntId: String = '590adcb046c55421c0f93586';
+  public readonly currentTournamntId: String = '59648a6723444a04143c3d53';
 
   cats = [];
   isLoading = true;
@@ -85,12 +87,17 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
+    // this.createTournament();
+    //
+    // this.addTeamToTournamentTable();
     this.getCats();
+    // this.addNewTeam();
 
+    // this.addNewUser();
     this.loadUsers();
-
+    //
     this.getTournamentTable();
-
+    //
     this.addCatForm = this.formBuilder.group({
       name: this.name,
       age: this.age,
@@ -126,7 +133,7 @@ export class HomeComponent implements OnInit {
     this.dataService.getTournamentTable(this.currentTableId.toString(), this.currentTournamntId.toString())
       .subscribe(
         (response: Array<ITournamentTable>) => {
-          console.log('tour: ', response);
+          console.log('tournamet table: ', response);
           if (response) {
             this.tournamentTable = response;
           }
@@ -139,7 +146,7 @@ export class HomeComponent implements OnInit {
   private addTeamToTournamentTable(): void {
 
     const request: any = {
-      teamId: '590c15bcb0b8f91ce8f14bbd',
+      teamId: '59648bc323444a04143c3d64',
       tableId: this.currentTableId.toString(),
       tournamentId: this.currentTournamntId.toString()
     };
@@ -147,7 +154,7 @@ export class HomeComponent implements OnInit {
     this.dataService.addEntityToTournamentTable(request)
       .subscribe(
         (response) => {
-          console.log('table created: ', response);
+          console.log('team added to table created: ', response);
         },
         (err) => console.log('error: ', err)
       );
@@ -155,7 +162,7 @@ export class HomeComponent implements OnInit {
 
   private createTournament(): void {
     const tournament: ITournament = {
-      title: 'FIFA tournament Start',
+      title: 'FIFA tournament 6',
       createdDate: new Date,
       table: [],
       matches: []
@@ -190,13 +197,13 @@ export class HomeComponent implements OnInit {
 
   public addNewTeam(): void {
     const team: ITeam = {
-      title: 'Juventus'
+      title: 'Chelsea'
     };
 
-    this.dataService.addNewTeam(team, '590622e3ca00c22bb43ccf03', this.currentTableId.toString())
+    this.dataService.addNewTeam(team, '59648b2d23444a04143c3d58', this.currentTableId.toString())
       .subscribe(
         (response) => {
-          console.log('re: ', response);
+          console.log('new team added: ', response);
         },
         (error) => console.log('error: ', error)
       );
@@ -204,8 +211,8 @@ export class HomeComponent implements OnInit {
 
   public addNewUser(): void {
     const user: IUser = {
-      name: 'Nikita',
-      age: 27
+      name: 'Bogdan',
+      age: 23
     };
 
     this.dataService.addNewUser(user, this.currentTableId.toString())

@@ -16,11 +16,14 @@
         <th>P</th>
         <th>Name</th>
         <th>G</th>
+        <th>W</th>
+        <th>D</th>
+        <th>L</th>
         <th>S</th>
         <th>M</th>
         <th>D</th>
-        <th>Series</th>
-        <th>P</th>
+        <th class="center">Series</th>
+        <th class="center">P</th>
       </tr>
       </thead>
       <tbody *ngIf="tournamentTable.length === 0">
@@ -31,8 +34,13 @@
       <tbody>
       <tr *ngFor="let entity of tournamentTable;let i=index">
         <td>{{i+1}}</td>
-        <td>{{entity.team.title}}</td>
+        <td class="name">
+          {{entity.team.title}} {{entity?.owner?.name}}
+        </td>
         <td>{{entity.games}}</td>
+        <td>{{0}}</td>
+        <td>{{0}}</td>
+        <td>{{0}}</td>
         <td>{{entity.scored}}</td>
         <td>{{entity.missed}}</td>
         <td style="text-align: center">
